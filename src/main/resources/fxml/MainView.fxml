@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.todoapp.controllers.MainController">
+
+    <Label text="To-Do List" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+
+    <HBox spacing="10">
+        <TextField fx:id="taskTitle" promptText="Enter task title..." />
+        <DatePicker fx:id="dueDate" />
+        <ChoiceBox fx:id="priority" />
+        <ChoiceBox fx:id="recurrence" />
+        <Button text="Add Task" onAction="#handleAddTask" />
+    </HBox>
+
+    <ListView fx:id="taskList" />
+
+    <HBox spacing="10">
+        <Button text="Edit Task" onAction="#handleEditTask" />
+        <Button text="Mark Complete" onAction="#handleMarkComplete" />
+        <Button text="Delete" onAction="#handleDeleteTask" />
+    </HBox>
+
+    <HBox spacing="10">
+        <Button text="Export JSON" onAction="#handleExportTasks" />
+        <Button text="Import JSON" onAction="#handleImportTasks" />
+        <ToggleButton fx:id="darkModeToggle" text="Dark Mode" onAction="#toggleDarkMode" />
+    </HBox>
+
+    <VBox spacing="10">
+        <Label text="Task Statistics" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+        <ProgressBar fx:id="taskProgress" prefWidth="200.0" />
+    </VBox>
+
+</VBox>
