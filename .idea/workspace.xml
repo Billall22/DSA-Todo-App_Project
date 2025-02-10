@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="013b7559-1c5f-4f22-aa95-0d6d74312eff" name="Changes" comment="v4 fixed imp/exp and jason handling">
+    <list default="true" id="013b7559-1c5f-4f22-aa95-0d6d74312eff" name="Changes" comment="v5 build now works with jlink">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/todoapp/Launcher.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/todoapp/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/todoapp/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,7 +152,7 @@
       <workItem from="1738945803490" duration="717000" />
       <workItem from="1739115652512" duration="132000" />
       <workItem from="1739115820699" duration="9815000" />
-      <workItem from="1739193913251" duration="24599000" />
+      <workItem from="1739193913251" duration="25917000" />
     </task>
     <task id="LOCAL-00001" summary="v1 some features still needs addition">
       <option name="closed" value="true" />
@@ -216,7 +218,23 @@
       <option name="project" value="LOCAL" />
       <updated>1739223801311</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="v5 build now works with jlink">
+      <option name="closed" value="true" />
+      <created>1739228102538</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1739228102538</updated>
+    </task>
+    <task id="LOCAL-00010" summary="v5 build now works with jlink">
+      <option name="closed" value="true" />
+      <created>1739228130144</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1739228130144</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -252,7 +270,8 @@
     <MESSAGE value="v1 some features still needs addition" />
     <MESSAGE value="v3 everything works" />
     <MESSAGE value="v4 fixed imp/exp and jason handling" />
-    <option name="LAST_COMMIT_MESSAGE" value="v4 fixed imp/exp and jason handling" />
+    <MESSAGE value="v5 build now works with jlink" />
+    <option name="LAST_COMMIT_MESSAGE" value="v5 build now works with jlink" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
