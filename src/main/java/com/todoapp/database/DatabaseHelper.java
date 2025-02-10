@@ -61,6 +61,11 @@ public class DatabaseHelper {
         }
     }
 
+    public static void deleteAllTasks() {
+        String sql = "DELETE FROM tasks";
+        executeStatement(sql);
+    }
+
     public static List<Task> getTasks() // Helper method to get all tasks from the database
     {
         List<Task> tasks = new ArrayList<>();

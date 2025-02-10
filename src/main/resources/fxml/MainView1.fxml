@@ -23,6 +23,7 @@
         <Button text="Edit Task" onAction="#handleEditTask" />
         <Button text="Mark Complete" onAction="#handleMarkComplete" />
         <Button text="Delete" onAction="#handleDeleteTask" />
+        <Button text="Clear All" onAction="#handledeleteall"/>
     </HBox>
 
     <HBox spacing="10">

@@ -2,11 +2,14 @@ package com.todoapp.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.todoapp.database.DatabaseHelper;
 import com.todoapp.models.Task;
 import com.todoapp.utils.LocalDateDeserializer;
 import com.todoapp.utils.LocalDateSerializer;
+import com.todoapp.utils.TaskDeserializer;
+import com.todoapp.utils.TaskSerializer;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -23,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,8 +53,11 @@ public class MainController {
     @FXML
     private ToggleButton darkModeToggle;
     private final Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Task.class, new TaskSerializer())
+            .registerTypeAdapter(Task.class, new TaskDeserializer())
             .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
             .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
+            .setPrettyPrinting()
             .create();
 
     public MainController() {
@@ -115,15 +122,68 @@ public class MainController {
     }
 
     @FXML
-    public void handleExportTasks()//export tasks
-    {
+    public void handleImportTasks() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        fileChooser.setTitle("Select JSON File to Import");
+
+        Path todoAppFolderPath = Paths.get(System.getProperty("user.home"), "Documents", "TodoApp");
+        if (Files.exists(todoAppFolderPath)) {
+            fileChooser.setInitialDirectory(todoAppFolderPath.toFile());
+        }
+
+        File selectedFile = fileChooser.showOpenDialog(scene.getWindow());
+        if (selectedFile != null) {
+            try {
+                String json = new String(Files.readAllBytes(selectedFile.toPath()));
+                if (json.trim().isEmpty()) {
+                    showAlert("The selected file is empty.");
+                    return;
+                }
+
+                List<Task> importedTasks = gson.fromJson(json, new TypeToken<List<Task>>() {
+                }.getType());
+                if (importedTasks == null) {
+                    showAlert("No tasks found in the file.");
+                    return;
+                }
+
+                List<Task> existingTasks = DatabaseHelper.getTasks();
+
+                for (Task task : importedTasks) {
+                    boolean isDuplicate = existingTasks.stream()
+                            .anyMatch(existingTask -> existingTask.getTitle().equals(task.getTitle()) &&
+                                    existingTask.getDueDate().equals(task.getDueDate()) &&
+                                    existingTask.getPriority().equals(task.getPriority()) &&
+                                    existingTask.getCategory().equals(task.getCategory()) &&
+                                    existingTask.getRecurrence().equals(task.getRecurrence()) &&
+                                    existingTask.isCompleted() == task.isCompleted());
+
+                    if (!isDuplicate) {
+                        DatabaseHelper.addTask(task);
+                    }
+                }
+                refreshTasks();
+                showAlert("Tasks imported successfully from " + selectedFile.getPath());
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Failed to import tasks.");
+            } catch (JsonSyntaxException e) {
+                e.printStackTrace();
+                showAlert("The file contains invalid JSON.");
+            }
+        }
+    }
+
+    @FXML
+    public void handleExportTasks() {
         try {
             Path todoAppFolderPath = Paths.get(System.getProperty("user.home"), "Documents", "TodoApp");
             if (!Files.exists(todoAppFolderPath)) {
                 Files.createDirectories(todoAppFolderPath);
             }
 
-            String defaultFileName = LocalDate.now().toString();
+            String defaultFileName = "tasks_" + LocalDate.now().toString();
             TextInputDialog dialog = new TextInputDialog(defaultFileName);
             dialog.setTitle("Export Tasks");
             dialog.setHeaderText("Enter the name for the JSON file");
@@ -136,47 +196,13 @@ public class MainController {
 
             Path filePath = todoAppFolderPath.resolve(fileName);
             try (FileWriter writer = new FileWriter(filePath.toFile())) {
-                gson.toJson(tasks, writer);
+                List<Task> tasksToExport = new ArrayList<>(taskList.getItems());
+                gson.toJson(tasksToExport, writer);
                 showAlert("Tasks exported successfully to " + filePath);
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void handleImportTasks()// import tasks
-    {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
-        fileChooser.setTitle("Select JSON File to Import");
-
-        File selectedFile = fileChooser.showOpenDialog(scene.getWindow());
-        if (selectedFile != null) {
-            try {
-                String json = new String(Files.readAllBytes(selectedFile.toPath()));
-                List<Task> importedTasks = gson.fromJson(json, new TypeToken<List<Task>>() {
-                }.getType());
-                List<Task> existingTasks = DatabaseHelper.getTasks();
-
-                for (Task task : importedTasks) {
-                    boolean isDuplicate = existingTasks.stream()
-                            .anyMatch(existingTask -> existingTask.getTitle().equals(task.getTitle()) &&
-                                    existingTask.getDueDate().equals(task.getDueDate()) &&
-                                    existingTask.getPriority().equals(task.getPriority()) &&
-                                    existingTask.getCategory().equals(task.getCategory()) &&
-                                    existingTask.getRecurrence().equals(task.getRecurrence()) &&
-                                    existingTask.isCompleted() == (task.isCompleted()));
-
-                    if (!isDuplicate) {
-                        DatabaseHelper.addTask(task);
-                    }
-                }
-                refreshTasks();
-                showAlert("Tasks imported successfully from " + selectedFile.getPath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            showAlert("Failed to export tasks.");
         }
     }
 
@@ -290,6 +316,32 @@ public class MainController {
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
         alert.show();
+    }
+
+    private void handleDragAndDrop() {
+        taskList.setOnDragOver(event -> {
+            if (event.getGestureSource() != taskList && event.getDragboard().hasString()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+            event.consume();
+        });
+
+        taskList.setOnDragDropped(event -> {
+            Dragboard dragboard = event.getDragboard();
+            if (dragboard.hasString()) {
+                Task task = new Task(0, dragboard.getString(), "", LocalDate.now(), "Low", false, "Personal", "None");
+                DatabaseHelper.addTask(task);
+                refreshTasks();
+                event.setDropCompleted(true);
+            }
+            event.consume();
+        });
+    }
+
+    @FXML
+    private void handledeleteall() {
+        taskList.getItems().clear();
+        DatabaseHelper.deleteAllTasks();
     }
 
     @FXML
