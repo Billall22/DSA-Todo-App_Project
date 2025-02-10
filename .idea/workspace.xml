@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="013b7559-1c5f-4f22-aa95-0d6d74312eff" name="Changes" comment="v3 everything works">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/todoapp/utils/TaskSerializer.java" afterDir="false" />
+    <list default="true" id="013b7559-1c5f-4f22-aa95-0d6d74312eff" name="Changes" comment="v4 fixed imp/exp and jason handling">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/todoapp/controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/todoapp/controllers/MainController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tasks.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +102,7 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JAR Application.ToDo_App.jar">
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.todoapp.App" />
       <module name="ToDo_App.main" />
@@ -117,8 +116,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ToDo_App.jar" type="JarApplication" temporary="true">
+      <option name="JAR_PATH" value="$PROJECT_DIR$/build/libs/ToDo_App.jar" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JAR Application.ToDo_App.jar" />
         <item itemvalue="Application.App" />
         <item itemvalue="Application.App" />
       </list>
@@ -146,7 +150,7 @@
       <workItem from="1738945803490" duration="717000" />
       <workItem from="1739115652512" duration="132000" />
       <workItem from="1739115820699" duration="9815000" />
-      <workItem from="1739193913251" duration="19995000" />
+      <workItem from="1739193913251" duration="24599000" />
     </task>
     <task id="LOCAL-00001" summary="v1 some features still needs addition">
       <option name="closed" value="true" />
@@ -204,7 +208,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739221325940</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="v3 fixed imp/exp and jason handling">
+      <option name="closed" value="true" />
+      <created>1739223801311</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1739223801311</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,7 +251,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="v1 some features still needs addition" />
     <MESSAGE value="v3 everything works" />
-    <option name="LAST_COMMIT_MESSAGE" value="v3 everything works" />
+    <MESSAGE value="v4 fixed imp/exp and jason handling" />
+    <option name="LAST_COMMIT_MESSAGE" value="v4 fixed imp/exp and jason handling" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
