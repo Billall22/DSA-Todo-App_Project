@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <VBox spacing="10" xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.todoapp.controllers.MainController">
@@ -14,6 +13,7 @@
         <DatePicker fx:id="dueDate" />
         <ChoiceBox fx:id="priority" />
         <ChoiceBox fx:id="recurrence" />
+        <ChoiceBox fx:id="category"/>
         <Button text="Add Task" onAction="#handleAddTask" />
     </HBox>
 
@@ -33,7 +33,7 @@
 
     <VBox spacing="10">
         <Label text="Task Statistics" style="-fx-font-size: 20px; -fx-font-weight: bold;" />
-        <ProgressBar fx:id="taskProgress" prefWidth="200.0" />
+        <ProgressBar fx:id="taskProgress" prefWidth="300.0"/>
     </VBox>
 
 </VBox>

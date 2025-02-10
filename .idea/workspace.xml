@@ -4,9 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="013b7559-1c5f-4f22-aa95-0d6d74312eff" name="Changes" comment="v1 some features still needs addition">
+    <list default="true" id="013b7559-1c5f-4f22-aa95-0d6d74312eff" name="Changes" comment="v2">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/todo.db" beforeDir="false" afterPath="$PROJECT_DIR$/todo.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/todoapp/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/todoapp/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/todoapp/controllers/MainController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/todoapp/controllers/MainController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/todoapp/database/DatabaseHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/todoapp/database/DatabaseHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/todoapp/models/Task.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/todoapp/models/Task.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/todoapp/services/ReminderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/todoapp/services/ReminderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/todoapp/utils/LocalDateDeserializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/todoapp/utils/LocalDateDeserializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/todoapp/utils/LocalDateSerializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/todoapp/utils/LocalDateSerializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/fxml/MainView.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fxml/MainView1.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/styles/dark-mode.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/styles/dark-mode.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tasks.json" beforeDir="false" afterPath="$PROJECT_DIR$/tasks.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todo.db" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +67,11 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="446fc4b2c865dc533f81797fddfaba2081ec6f05" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="2sLwhVpidALbboMkzHyNuYDqqAq" />
@@ -107,6 +123,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.App" />
+        <item itemvalue="Application.App" />
       </list>
     </recent_temporary>
   </component>
@@ -131,6 +148,8 @@
       <workItem from="1738525849230" duration="151000" />
       <workItem from="1738945803490" duration="717000" />
       <workItem from="1739115652512" duration="132000" />
+      <workItem from="1739115820699" duration="9815000" />
+      <workItem from="1739193913251" duration="17339000" />
     </task>
     <task id="LOCAL-00001" summary="v1 some features still needs addition">
       <option name="closed" value="true" />
@@ -172,13 +191,36 @@
       <option name="project" value="LOCAL" />
       <updated>1738264874268</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="v2">
+      <option name="closed" value="true" />
+      <created>1739117950355</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1739117950355</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="User">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="*" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
@@ -191,6 +233,22 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="v1 some features still needs addition" />
-    <option name="LAST_COMMIT_MESSAGE" value="v1 some features still needs addition" />
+    <MESSAGE value="v2" />
+    <option name="LAST_COMMIT_MESSAGE" value="v2" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/com/todoapp/controllers/MainController.java</url>
+          <line>183</line>
+          <properties class="com.todoapp.controllers.MainController" method="handleMarkComplete">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

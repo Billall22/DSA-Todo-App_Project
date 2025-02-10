@@ -9,4 +9,5 @@ module com.todoapp {
     opens com.todoapp.models to com.google.gson;
     exports com.todoapp;
     exports com.todoapp.controllers;
+
 }

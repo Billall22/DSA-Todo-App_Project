@@ -1,21 +1,39 @@
 .root {
-    -fx-background-color: #2b2b2b;
-    -fx-text-fill: white;
+    -fx-background-color: #1e1e1e;
+    -fx-text-fill: #dcdcdc;
 }
 
 .button {
-    -fx-background-color: #4a4a4a;
-    -fx-text-fill: white;
+    -fx-background-color: #3a3a3a;
+    -fx-text-fill: #dcdcdc;
+    -fx-border-color: #5a5a5a;
+    -fx-border-width: 1px;
 }
 
 .list-view {
-    -fx-background-color: #333;
+    -fx-background-color: #2e2e2e;
 }
 
 .list-cell {
-    -fx-text-fill: white;
+    -fx-text-fill: #dcdcdc;
+    -fx-background-color: #2e2e2e;
+}
+
+.list-cell:filled:selected, .list-cell:filled:hover {
+    -fx-background-color: #3a3a3a;
 }
 
 .label {
-    -fx-text-fill: white;
+    -fx-text-fill: #dcdcdc;
+}
+
+.text-field, .date-picker, .choice-box {
+    -fx-background-color: #3a3a3a;
+    -fx-text-fill: #dcdcdc;
+    -fx-border-color: #5a5a5a;
+    -fx-border-width: 1px;
+}
+
+.progress-bar {
+    -fx-accent: #5a5a5a;
 }

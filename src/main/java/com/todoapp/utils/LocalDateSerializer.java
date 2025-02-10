@@ -10,11 +10,12 @@ import java.time.LocalDate;
 
 public class LocalDateSerializer implements JsonSerializer<LocalDate> {
     @Override
-    public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(LocalDate src, Type typeOfSrc, JsonSerializationContext context) // Serialize LocalDate
+    {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("year", src.getYear());
-        jsonObject.addProperty("month", src.getMonthValue());
         jsonObject.addProperty("day", src.getDayOfMonth());
+        jsonObject.addProperty("month", src.getMonthValue());
+        jsonObject.addProperty("year", src.getYear());
         return jsonObject;
     }
 }

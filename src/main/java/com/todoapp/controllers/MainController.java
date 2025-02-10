@@ -10,10 +10,13 @@ import com.todoapp.utils.LocalDateSerializer;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,38 +24,63 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 public class MainController {
-    @FXML private TextField taskTitle;
-    @FXML private DatePicker dueDate;
-    @FXML private ChoiceBox<String> priority;
-    @FXML private List<Task> tasks;
-    @FXML private ToggleButton darkModeToggle;
-    @FXML private Scene scene;
-    @FXML private ChoiceBox<String> recurrence;
-    @FXML private ListView<Task> taskList;
-    @FXML private ProgressBar taskProgress;
-
+    private static MainController instance;
+    @FXML
+    private TextField taskTitle;
+    @FXML
+    private DatePicker dueDate;
+    @FXML
+    private ChoiceBox<String> priority;
+    @FXML
+    private ChoiceBox<String> recurrence;
+    @FXML
+    private ChoiceBox<String> category;
+    @FXML
+    private ProgressBar taskProgress;
+    @FXML
+    private List<Task> tasks;
+    @FXML
+    private ListView<Task> taskList;
+    @FXML
+    private Scene scene;
+    @FXML
+    private ToggleButton darkModeToggle;
     private final Gson gson = new GsonBuilder()
             .registerTypeAdapter(LocalDate.class, new LocalDateSerializer())
             .registerTypeAdapter(LocalDate.class, new LocalDateDeserializer())
             .create();
 
+    public MainController() {
+        instance = this;
+    }
+
+    public static void updateStatistics() {
+        if (instance != null) {
+            instance.updateStatisticsInstance();
+        }
+    }
+
     @FXML
-    public void handleAddTask() {
+    public void handleAddTask() // Add a new task
+    {
         String title = taskTitle.getText();
         LocalDate date = dueDate.getValue();
         String priorityValue = priority.getValue();
+        String categoryValue = category.getValue();
 
-        if (title.isEmpty() || date == null || priorityValue == null) {
+        if (title.isEmpty() || date == null || priorityValue == null || categoryValue == null) {
             showAlert("All fields must be filled!");
             return;
         }
 
-        Task task = new Task(0, title, "", date, priorityValue, false, "General", "None");
+        Task task = new Task(0, title, "", date, priorityValue, false, categoryValue, "None");
         DatabaseHelper.addTask(task);
         refreshTasks();
     }
+
     @FXML
     public void handleEditTask() {
         int index = taskList.getSelectionModel().getSelectedIndex();
@@ -61,14 +89,17 @@ public class MainController {
             return;
         }
 
-        Task selectedTask = tasks.get(index);
+        Task selectedTask = taskList.getItems().get(index); // Ensure this is from taskList
         selectedTask.setTitle(taskTitle.getText());
         selectedTask.setDueDate(dueDate.getValue());
         selectedTask.setPriority(priority.getValue());
+        selectedTask.setCategory(category.getValue());
+        selectedTask.setRecurrence(recurrence.getValue());
 
         DatabaseHelper.updateTask(selectedTask);
         refreshTasks();
     }
+
     @FXML
     public void handleDeleteTask() {
         int index = taskList.getSelectionModel().getSelectedIndex();
@@ -77,37 +108,95 @@ public class MainController {
             return;
         }
 
-        Task selectedTask = tasks.get(index);
+        Task selectedTask = taskList.getItems().get(index);
         DatabaseHelper.deleteTask(selectedTask.getId());
+        taskList.getItems().remove(index); // Ensure the task is removed from the UI
         refreshTasks();
     }
+
     @FXML
-    public void handleExportTasks() {
+    public void handleExportTasks()//export tasks
+    {
         try {
-            Path documentsPath = Paths.get(System.getProperty("user.home"), "Documents", "tasks.json");
-            try (FileWriter writer = new FileWriter(documentsPath.toFile())) {
+            Path todoAppFolderPath = Paths.get(System.getProperty("user.home"), "Documents", "TodoApp");
+            if (!Files.exists(todoAppFolderPath)) {
+                Files.createDirectories(todoAppFolderPath);
+            }
+
+            String defaultFileName = LocalDate.now().toString();
+            TextInputDialog dialog = new TextInputDialog(defaultFileName);
+            dialog.setTitle("Export Tasks");
+            dialog.setHeaderText("Enter the name for the JSON file");
+            dialog.setContentText("File name:");
+
+            String fileName = dialog.showAndWait().orElse(defaultFileName);
+            if (!fileName.endsWith(".json")) {
+                fileName += ".json";
+            }
+
+            Path filePath = todoAppFolderPath.resolve(fileName);
+            try (FileWriter writer = new FileWriter(filePath.toFile())) {
                 gson.toJson(tasks, writer);
-                showAlert("Tasks exported successfully to " + documentsPath.toString());
+                showAlert("Tasks exported successfully to " + filePath);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     @FXML
-    public void handleImportTasks() {
-        try {
-            Path documentsPath = Paths.get(System.getProperty("user.home"), "Documents", "tasks.json");
-            String json = new String(Files.readAllBytes(documentsPath));
-            List<Task> importedTasks = gson.fromJson(json, new TypeToken<List<Task>>(){}.getType());
-            for (Task task : importedTasks) {
-                DatabaseHelper.addTask(task);
+    public void handleImportTasks()// import tasks
+    {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        fileChooser.setTitle("Select JSON File to Import");
+
+        File selectedFile = fileChooser.showOpenDialog(scene.getWindow());
+        if (selectedFile != null) {
+            try {
+                String json = new String(Files.readAllBytes(selectedFile.toPath()));
+                List<Task> importedTasks = gson.fromJson(json, new TypeToken<List<Task>>() {
+                }.getType());
+                List<Task> existingTasks = DatabaseHelper.getTasks();
+
+                for (Task task : importedTasks) {
+                    boolean isDuplicate = existingTasks.stream()
+                            .anyMatch(existingTask -> existingTask.getTitle().equals(task.getTitle()) &&
+                                    existingTask.getDueDate().equals(task.getDueDate()) &&
+                                    existingTask.getPriority().equals(task.getPriority()) &&
+                                    existingTask.getCategory().equals(task.getCategory()) &&
+                                    existingTask.getRecurrence().equals(task.getRecurrence()) &&
+                                    existingTask.isCompleted() == (task.isCompleted()));
+
+                    if (!isDuplicate) {
+                        DatabaseHelper.addTask(task);
+                    }
+                }
+                refreshTasks();
+                showAlert("Tasks imported successfully from " + selectedFile.getPath());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            refreshTasks();
-            showAlert("Tasks imported successfully from " + documentsPath.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
+
+    public void setScene(Scene scene)// set the scene
+    {
+        this.scene = scene;
+    }
+
+    private void updateStatisticsInstance() {
+        int totalTasks = taskList.getItems().size();
+        long completedTasks = taskList.getItems().stream().filter(Task::isCompleted).count();
+
+        if (totalTasks > 0) {
+            taskProgress.setProgress((double) completedTasks / totalTasks);
+        } else {
+            taskProgress.setProgress(0);
+        }
+    }
+
+
     @FXML
     public void handleMarkComplete() {
         int index = taskList.getSelectionModel().getSelectedIndex();
@@ -116,38 +205,43 @@ public class MainController {
             return;
         }
 
-        Task task = tasks.get(index);
-        DatabaseHelper.markTaskCompleted(task.getId());
+        Task task = taskList.getItems().get(index);
+        task.setCompleted(true);
+        DatabaseHelper.updateTaskCompletionStatus(task.getId(), true);
 
         if (task.isRecurring()) {
-            Task newTask = new Task(0, task.getTitle(), task.getDescription(), task.getNextDueDate(), task.getPriority(), false, task.getCategory(), task.getRecurrence());
-            DatabaseHelper.addTask(newTask);
+            Task newTask = task.createNextRecurringTask();
+            if (newTask != null) {
+                DatabaseHelper.addTask(newTask);
+            }
         }
 
         refreshTasks();
     }
-    private void refreshTasks() {
-        taskList.getItems().clear();
-        tasks = DatabaseHelper.getTasks();
-        for (Task task : tasks) {
-            taskList.getItems().add(task);
-        }
-        updateStatistics();
-    }
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
-        alert.show();
-    }
+
+    @FXML
     public void initialize() {
-        taskList.setCellFactory(lv -> {
-            ListCell<Task> cell = new ListCell<Task>() {
+        taskList.setCellFactory(listView -> {
+            CheckBoxListCell<Task> cell = new CheckBoxListCell<>(Task::completedProperty) {
                 @Override
-                protected void updateItem(Task task, boolean empty) {
+                public void updateItem(Task task, boolean empty) {
                     super.updateItem(task, empty);
-                    setText(empty ? null : task.getTitle() + " - " + task.getDueDate());
+                    if (task != null) {
+                        setText(task.getTitle() + " - " + task.getDueDate());
+                        task.completedProperty().addListener((observable, oldValue, newValue) -> {
+                            if (newValue && !oldValue) {
+                                DatabaseHelper.updateTaskCompletionStatus(task.getId(), newValue);
+                                updateStatisticsInstance();
+                                refreshTasks();
+                            }
+                        });
+                    } else {
+                        setText(null);
+                    }
                 }
             };
 
+            // Drag and drop handlers (unchanged)
             cell.setOnDragDetected(event -> {
                 if (cell.getItem() == null) return;
                 Dragboard dragboard = cell.startDragAndDrop(TransferMode.MOVE);
@@ -181,28 +275,28 @@ public class MainController {
 
             return cell;
         });
+
         priority.getItems().addAll("Low", "Medium", "High");
         recurrence.getItems().addAll("None", "Daily", "Weekly", "Monthly");
+        category.getItems().addAll("Work", "Personal", "Urgent");
         refreshTasks();
     }
-    public void setScene(Scene scene) {
-        this.scene = scene;
-    }
-    private void updateStatistics() {
-        int totalTasks = tasks.size();
-        long completedTasks = tasks.stream().filter(Task::isCompleted).count();
 
-        if (totalTasks > 0) {
-            taskProgress.setProgress((double) completedTasks / totalTasks);
-        } else {
-            taskProgress.setProgress(0);
-        }
+    public void refreshTasks() {
+        List<Task> tasks = DatabaseHelper.getTasks();
+        taskList.getItems().setAll(tasks);
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
+        alert.show();
     }
 
     @FXML
-    public void toggleDarkMode() {
+    public void toggleDarkMode()// toggle dark mode
+    {
         if (darkModeToggle != null && darkModeToggle.isSelected()) {
-            scene.getStylesheets().add(getClass().getResource("/styles/dark-mode.css").toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/dark-mode.css")).toExternalForm());
         } else {
             scene.getStylesheets().clear();
         }

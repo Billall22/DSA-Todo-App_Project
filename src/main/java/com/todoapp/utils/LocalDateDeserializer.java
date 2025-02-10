@@ -10,11 +10,12 @@ import java.time.LocalDate;
 
 public class LocalDateDeserializer implements JsonDeserializer<LocalDate> {
     @Override
-    public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+    public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) // Deserialize LocalDate
+    {
         JsonObject jsonObject = json.getAsJsonObject();
-        int year = jsonObject.get("year").getAsInt();
-        int month = jsonObject.get("month").getAsInt();
         int day = jsonObject.get("day").getAsInt();
-        return LocalDate.of(year, month, day);
+        int month = jsonObject.get("month").getAsInt();
+        int year = jsonObject.get("year").getAsInt();
+        return LocalDate.of(day, month, year);
     }
 }
